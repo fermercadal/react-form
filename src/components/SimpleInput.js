@@ -3,36 +3,27 @@ import { useRef, useState } from "react";
 const SimpleInput = (props) => {
   const nameInputRef = useRef();
   const [enteredName, setEnteredName] = useState("");
-  const [nameIsValid, setNameIsValid] = useState(true);
   const [nameTouched, setNameTouched] = useState(false);
+
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const invalidName = nameTouched && !enteredNameIsValid;
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
-
-    if (event.target.value.trim() !== "" || event.target.value.trim() !== " ") {
-      setNameIsValid(true);
-    }
   };
 
   const nameInputBlurHandler = () => {
     setNameTouched(true);
-
-    if (enteredName.trim() === "" || enteredName.trim() === " ") {
-      setNameIsValid(false);
-    }
   };
-  
+
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
     setNameTouched(true);
 
-    if (enteredName.trim() === "" || enteredName.trim() === " ") {
-      setNameIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
-
-    setNameIsValid(true);
 
     // Using State
     console.log("enteredName", enteredName);
@@ -42,10 +33,8 @@ const SimpleInput = (props) => {
     console.log("enteredValue", enteredValue);
 
     setEnteredName("");
+    setNameTouched(false);
   };
-
-
-  const invalidName = nameTouched && !nameIsValid;
 
   const nameInputClasses = invalidName
     ? "form-control invalid"
